@@ -1,0 +1,89 @@
+{
+    "name": "power-grid-minimal",
+    "start_time": "2025-02-10T00:00:00+01:00",
+    "description": "Minimal power-grid-inspired AIT-ADS-A reconstruction. This configuration reuses existing alert fragments without copying or rewriting raw data.",
+    "train": [
+        [
+            {
+                "noise": ["shaw-1"],
+                "attacks": [],
+                "_comment": "Substation A baseline day: routine background alerts only, representing periodic SCADA and operator-network noise."
+            },
+            {
+                "noise": ["shaw-2"],
+                "attacks": [
+                    ["shaw-dns_scan", "08:00:00"],
+                    ["shaw-wpscan", "08:00:12"],
+                    ["shaw-dirb", "08:00:20"],
+                    ["shaw-webshell_cmd", "08:00:40"],
+                    ["shaw-crack_passwords", "08:02:00"],
+                    ["shaw-attacker_change_user", "08:05:00"],
+                    ["shaw-escalated_sudo_command", "08:05:10"]
+                ],
+                "_comment": "Morning dispatch window: reconnaissance, IED/gateway enumeration, control gateway compromise, account brute force, and privilege escalation happen close together."
+            }
+        ],
+        [
+            {
+                "noise": ["wardbeck-1"],
+                "attacks": [
+                    ["wardbeck-dnsteal_start", "00:00:05"]
+                ],
+                "_comment": "Substation B telemetry collection begins quietly at the start of the day."
+            },
+            {
+                "noise": ["wardbeck-2"],
+                "attacks": [
+                    ["wardbeck-service_scan", "10:15:00"],
+                    ["wardbeck-wpscan", "10:15:06"],
+                    ["wardbeck-dirb", "10:15:15"],
+                    ["wardbeck-webshell_cmd", "10:15:30"],
+                    ["wardbeck-crack_passwords", "10:16:00"],
+                    ["wardbeck-attacker_change_user", "10:25:00"],
+                    ["wardbeck-escalated_sudo_command", "10:25:12"],
+                    ["wardbeck-dnsteal_end", "10:30:00"]
+                ],
+                "_comment": "Control-center pivot: scan/enumeration and telemetry exfiltration overlap, stressing time-only grouping."
+            }
+        ]
+    ],
+    "val": [
+        [
+            {
+                "noise": ["russellmitchell-1"],
+                "attacks": [
+                    ["russellmitchell-dnsteal_start", "00:00:09"],
+                    ["russellmitchell-service_scan", "12:00:00"],
+                    ["russellmitchell-wpscan", "12:00:08"],
+                    ["russellmitchell-dirb", "12:00:15"],
+                    ["russellmitchell-webshell_cmd", "12:00:30"],
+                    ["russellmitchell-crack_passwords", "12:01:00"],
+                    ["russellmitchell-attacker_change_user", "12:05:00"],
+                    ["russellmitchell-escalated_sudo_command", "12:05:10"],
+                    ["russellmitchell-dnsteal_end", "12:10:00"]
+                ],
+                "_comment": "Validation scenario: midday control action window with simultaneous telemetry leakage and operator compromise."
+            }
+        ]
+    ],
+    "test": [
+        [
+            {
+                "noise": ["santos-1", "russellmitchell-2"],
+                "attacks": [
+                    ["santos-dnsteal_start", "00:00:05"],
+                    ["santos-service_scan", "14:00:00"],
+                    ["santos-wpscan", "14:00:08"],
+                    ["santos-dirb", "14:00:15"],
+                    ["santos-webshell_cmd", "14:00:35"],
+                    ["santos-online_cracking", "14:01:00"],
+                    ["santos-crack_passwords", "14:02:00"],
+                    ["santos-attacker_change_user", "14:08:00"],
+                    ["santos-escalated_sudo_command", "14:08:10"],
+                    ["santos-dnsteal_end", "14:12:00"]
+                ],
+                "_comment": "Test scenario: two background-noise sources emulate central monitoring of multiple substations during a dense attack burst."
+            }
+        ]
+    ]
+}

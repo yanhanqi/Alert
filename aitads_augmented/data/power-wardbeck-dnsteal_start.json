@@ -1,0 +1,24 @@
+[
+  {
+    "time": 0,
+    "name": "SCADA IDS: PMU telemetry exfiltration session started",
+    "ip": "10.66.2.15",
+    "host": "pmu_gateway",
+    "short": "PMU-Exfil-Start",
+    "time_label": "telemetry_exfiltration_start",
+    "event_label": "telemetry_exfiltration",
+    "hierarchical_event_label": "telemetry_exfiltration.start.",
+    "raw_time": 0.0
+  },
+  {
+    "time": 0,
+    "name": "SCADA IDS: PMU telemetry exfiltration session started",
+    "ip": "10.66.2.15",
+    "host": "pmu_gateway",
+    "short": "PMU-Exfil-Start",
+    "time_label": "telemetry_exfiltration_start",
+    "event_label": "telemetry_exfiltration",
+    "hierarchical_event_label": "telemetry_exfiltration.start.",
+    "raw_time": 0.0
+  }
+]

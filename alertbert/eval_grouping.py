@@ -24,7 +24,7 @@ from alertbert.models import (
     TimeDelta,
 )
 from alertbert.preprocessing import Vocabulary
-from alertbert.utils import log_to_stdout, set_up_log
+from alertbert.utils import get_device, log_to_stdout, set_up_log
 
 """This module contains functions for evaluating alert grouping models.
 If executed as a script, it will load a trained model and evaluate it on the training and validation sets of the specified augmentation of the AIT Alert dataset.
@@ -1530,7 +1530,7 @@ def main(
     else:
         logging.info("Evaluating AlertBert models...") if write_logs else None
         reports, model_param_dicts = load_reports(model_ids, path)
-        device = "cpu"
+        device = get_device()
 
         logging.info("Loading data tools...") if write_logs else None
         data_tools = load_data_tools(model_ids, model_param_dicts, path, label_vocabs)
@@ -1619,7 +1619,8 @@ if __name__ == "__main__":
                 yield model_id, config
 
     def eval_run_ab(theta_traj: list[float], deltas: list[float]) -> None:
-        Parallel(n_jobs=8)(
+        n_jobs = 1 if get_device().type == "cuda" else 8
+        Parallel(n_jobs=n_jobs)(
             delayed(compute_roc_trajectories)(
                 model_id=model_id,
                 aitads_a_config=config,

@@ -1,0 +1,10 @@
+{
+    "-": 115120,
+    "ied_enumeration": 33984,
+    "substation_recon": 111,
+    "control_privilege_escalation": 99,
+    "operator_role_switch": 53,
+    "control_gateway_compromise": 14,
+    "operator_account_attack": 12,
+    "telemetry_exfiltration": 12
+}

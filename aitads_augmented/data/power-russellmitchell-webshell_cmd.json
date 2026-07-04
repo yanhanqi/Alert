@@ -1,0 +1,35 @@
+[
+  {
+    "time": 0,
+    "name": "Wazuh: Unauthorized command execution on control gateway",
+    "ip": "10.66.2.53",
+    "host": "control_gateway",
+    "short": "Gateway-Cmd",
+    "time_label": "control_gateway_compromise",
+    "event_label": "control_gateway_compromise",
+    "hierarchical_event_label": "control_gateway_compromise.0.",
+    "raw_time": 0.0
+  },
+  {
+    "time": 8,
+    "name": "Wazuh: Unauthorized command execution on control gateway",
+    "ip": "10.66.2.53",
+    "host": "control_gateway",
+    "short": "Gateway-Cmd",
+    "time_label": "control_gateway_compromise",
+    "event_label": "control_gateway_compromise",
+    "hierarchical_event_label": "control_gateway_compromise.0.",
+    "raw_time": 8.0
+  },
+  {
+    "time": 34,
+    "name": "Wazuh: Unauthorized command execution on control gateway",
+    "ip": "10.66.2.53",
+    "host": "control_gateway",
+    "short": "Gateway-Cmd",
+    "time_label": "control_gateway_compromise",
+    "event_label": "control_gateway_compromise",
+    "hierarchical_event_label": "control_gateway_compromise.0.",
+    "raw_time": 34.0
+  }
+]

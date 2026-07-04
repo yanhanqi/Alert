@@ -108,11 +108,11 @@ def eval_masked_lang_model(
             for batch in loader:
                 batch = batch.to(device)
                 batch = model(batch)
-                for t in model.module["head"].targets:
-                    true = batch[f"{t}_true"]
+                for i, t in enumerate(model.module["head"].targets):
+                    true = model.true_targets[i]
                     stats[t]["true"].append(true.cpu())
                     stats[t]["size"].append(len(true))
-                    out = batch[f"{t}_pred_mask"]
+                    out = model.masked_outputs[i]
                     loss_value = loss_fn(out, true)
                     stats[t]["loss"].append(loss_value.item())
                     pred = out.argmax(dim=1)

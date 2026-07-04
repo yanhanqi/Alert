@@ -1,0 +1,12 @@
+{
+    "false_positive": 115103,
+    "dirb": 18088,
+    "wpscan": 15896,
+    "privilege_escalation": 152,
+    "service_scans": 102,
+    "dnsteal": 23,
+    "cracking": 20,
+    "network_scans": 9,
+    "webshell": 6,
+    "service_stop": 6
+}

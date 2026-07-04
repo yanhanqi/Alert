@@ -1,0 +1,18 @@
+{
+    "Relay-Test": 23588,
+    "HMI-Health": 21081,
+    "IED-Enum": 9044,
+    "FW-Allow": 7313,
+    "PMU-Batch": 3723,
+    "MMS-Enum": 2984,
+    "GOOSE-Hb": 1231,
+    "DNP3-Poll": 381,
+    "Priv-Esc": 56,
+    "Role-Switch": 27,
+    "DNP3-Recon": 23,
+    "IEC104-Recon": 9,
+    "Gateway-Cmd": 7,
+    "Op-Brute": 4,
+    "PMU-Exfil-Start": 2,
+    "PMU-Exfil-End": 2
+}

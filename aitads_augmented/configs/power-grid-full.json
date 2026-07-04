@@ -1,0 +1,207 @@
+{
+    "name": "power-grid-full",
+    "start_time": "2025-02-10T00:00:00+01:00",
+    "description": "Field-level electric power grid reconstruction generated from power-grid-minimal. This configuration references power-*.json fragments whose alert fields are rewritten with SCADA, substation, IED, PMU, and control-center terminology.",
+    "train": [
+        [
+            {
+                "noise": [
+                    "power-shaw-1"
+                ],
+                "attacks": [],
+                "_comment": "Substation A baseline day: routine background alerts only, representing periodic SCADA and operator-network noise."
+            },
+            {
+                "noise": [
+                    "power-shaw-2"
+                ],
+                "attacks": [
+                    [
+                        "power-shaw-dns_scan",
+                        "08:00:00"
+                    ],
+                    [
+                        "power-shaw-wpscan",
+                        "08:00:12"
+                    ],
+                    [
+                        "power-shaw-dirb",
+                        "08:00:20"
+                    ],
+                    [
+                        "power-shaw-webshell_cmd",
+                        "08:00:40"
+                    ],
+                    [
+                        "power-shaw-crack_passwords",
+                        "08:02:00"
+                    ],
+                    [
+                        "power-shaw-attacker_change_user",
+                        "08:05:00"
+                    ],
+                    [
+                        "power-shaw-escalated_sudo_command",
+                        "08:05:10"
+                    ]
+                ],
+                "_comment": "Morning dispatch window: reconnaissance, IED/gateway enumeration, control gateway compromise, account brute force, and privilege escalation happen close together."
+            }
+        ],
+        [
+            {
+                "noise": [
+                    "power-wardbeck-1"
+                ],
+                "attacks": [
+                    [
+                        "power-wardbeck-dnsteal_start",
+                        "00:00:05"
+                    ]
+                ],
+                "_comment": "Substation B telemetry collection begins quietly at the start of the day."
+            },
+            {
+                "noise": [
+                    "power-wardbeck-2"
+                ],
+                "attacks": [
+                    [
+                        "power-wardbeck-service_scan",
+                        "10:15:00"
+                    ],
+                    [
+                        "power-wardbeck-wpscan",
+                        "10:15:06"
+                    ],
+                    [
+                        "power-wardbeck-dirb",
+                        "10:15:15"
+                    ],
+                    [
+                        "power-wardbeck-webshell_cmd",
+                        "10:15:30"
+                    ],
+                    [
+                        "power-wardbeck-crack_passwords",
+                        "10:16:00"
+                    ],
+                    [
+                        "power-wardbeck-attacker_change_user",
+                        "10:25:00"
+                    ],
+                    [
+                        "power-wardbeck-escalated_sudo_command",
+                        "10:25:12"
+                    ],
+                    [
+                        "power-wardbeck-dnsteal_end",
+                        "10:30:00"
+                    ]
+                ],
+                "_comment": "Control-center pivot: scan/enumeration and telemetry exfiltration overlap, stressing time-only grouping."
+            }
+        ]
+    ],
+    "val": [
+        [
+            {
+                "noise": [
+                    "power-russellmitchell-1"
+                ],
+                "attacks": [
+                    [
+                        "power-russellmitchell-dnsteal_start",
+                        "00:00:09"
+                    ],
+                    [
+                        "power-russellmitchell-service_scan",
+                        "12:00:00"
+                    ],
+                    [
+                        "power-russellmitchell-wpscan",
+                        "12:00:08"
+                    ],
+                    [
+                        "power-russellmitchell-dirb",
+                        "12:00:15"
+                    ],
+                    [
+                        "power-russellmitchell-webshell_cmd",
+                        "12:00:30"
+                    ],
+                    [
+                        "power-russellmitchell-crack_passwords",
+                        "12:01:00"
+                    ],
+                    [
+                        "power-russellmitchell-attacker_change_user",
+                        "12:05:00"
+                    ],
+                    [
+                        "power-russellmitchell-escalated_sudo_command",
+                        "12:05:10"
+                    ],
+                    [
+                        "power-russellmitchell-dnsteal_end",
+                        "12:10:00"
+                    ]
+                ],
+                "_comment": "Validation scenario: midday control action window with simultaneous telemetry leakage and operator compromise."
+            }
+        ]
+    ],
+    "test": [
+        [
+            {
+                "noise": [
+                    "power-santos-1",
+                    "power-russellmitchell-2"
+                ],
+                "attacks": [
+                    [
+                        "power-santos-dnsteal_start",
+                        "00:00:05"
+                    ],
+                    [
+                        "power-santos-service_scan",
+                        "14:00:00"
+                    ],
+                    [
+                        "power-santos-wpscan",
+                        "14:00:08"
+                    ],
+                    [
+                        "power-santos-dirb",
+                        "14:00:15"
+                    ],
+                    [
+                        "power-santos-webshell_cmd",
+                        "14:00:35"
+                    ],
+                    [
+                        "power-santos-online_cracking",
+                        "14:01:00"
+                    ],
+                    [
+                        "power-santos-crack_passwords",
+                        "14:02:00"
+                    ],
+                    [
+                        "power-santos-attacker_change_user",
+                        "14:08:00"
+                    ],
+                    [
+                        "power-santos-escalated_sudo_command",
+                        "14:08:10"
+                    ],
+                    [
+                        "power-santos-dnsteal_end",
+                        "14:12:00"
+                    ]
+                ],
+                "_comment": "Test scenario: two background-noise sources emulate central monitoring of multiple substations during a dense attack burst."
+            }
+        ]
+    ]
+}

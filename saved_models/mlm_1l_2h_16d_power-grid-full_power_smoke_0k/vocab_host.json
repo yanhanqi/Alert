@@ -1,0 +1,14 @@
+{
+    "engineering_workstation": 14321,
+    "substation_a_ied": 12054,
+    "control_gateway": 11998,
+    "substation_b_ied": 8776,
+    "substation_a_rtu": 6240,
+    "control_center_hmi": 5592,
+    "pmu_gateway": 3295,
+    "substation_b_rtu": 3217,
+    "scada_firewall": 3074,
+    "substation_a_relay": 733,
+    "substation_b_relay": 127,
+    "control_center_historian": 48
+}

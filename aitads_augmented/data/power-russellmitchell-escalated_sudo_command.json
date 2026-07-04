@@ -1,0 +1,167 @@
+[
+  {
+    "time": 0,
+    "name": "Wazuh: Control host privilege escalation attempt",
+    "ip": "10.66.2.53",
+    "host": "control_gateway",
+    "short": "Priv-Esc",
+    "time_label": "control_privilege_escalation",
+    "event_label": "control_privilege_escalation",
+    "hierarchical_event_label": "control_privilege_escalation.0.",
+    "raw_time": 0.0
+  },
+  {
+    "time": 0,
+    "name": "Wazuh: Control host privilege escalation attempt",
+    "ip": "10.66.2.53",
+    "host": "control_gateway",
+    "short": "Priv-Esc",
+    "time_label": "control_privilege_escalation",
+    "event_label": "control_privilege_escalation",
+    "hierarchical_event_label": "control_privilege_escalation.0.",
+    "raw_time": 0.0
+  },
+  {
+    "time": 8,
+    "name": "Wazuh: Control host privilege escalation attempt",
+    "ip": "10.66.2.53",
+    "host": "control_gateway",
+    "short": "Priv-Esc",
+    "time_label": "control_privilege_escalation",
+    "event_label": "control_privilege_escalation",
+    "hierarchical_event_label": "control_privilege_escalation.0.",
+    "raw_time": 8.0
+  },
+  {
+    "time": 8,
+    "name": "Wazuh: Control host privilege escalation attempt",
+    "ip": "10.66.2.53",
+    "host": "control_gateway",
+    "short": "Priv-Esc",
+    "time_label": "control_privilege_escalation",
+    "event_label": "control_privilege_escalation",
+    "hierarchical_event_label": "control_privilege_escalation.0.",
+    "raw_time": 8.0
+  },
+  {
+    "time": 8,
+    "name": "Wazuh: Control host privilege escalation attempt",
+    "ip": "10.66.2.53",
+    "host": "control_gateway",
+    "short": "Priv-Esc",
+    "time_label": "control_privilege_escalation",
+    "event_label": "control_privilege_escalation",
+    "hierarchical_event_label": "control_privilege_escalation.0.",
+    "raw_time": 8.0
+  },
+  {
+    "time": 8,
+    "name": "Wazuh: Control host privilege escalation attempt",
+    "ip": "10.66.2.53",
+    "host": "control_gateway",
+    "short": "Priv-Esc",
+    "time_label": "control_privilege_escalation",
+    "event_label": "control_privilege_escalation",
+    "hierarchical_event_label": "control_privilege_escalation.0.",
+    "raw_time": 8.0
+  },
+  {
+    "time": 8,
+    "name": "Wazuh: Control host privilege escalation attempt",
+    "ip": "10.66.2.53",
+    "host": "control_gateway",
+    "short": "Priv-Esc",
+    "time_label": "control_privilege_escalation",
+    "event_label": "control_privilege_escalation",
+    "hierarchical_event_label": "control_privilege_escalation.0.",
+    "raw_time": 8.0
+  },
+  {
+    "time": 8,
+    "name": "Wazuh: Control host privilege escalation attempt",
+    "ip": "10.66.2.53",
+    "host": "control_gateway",
+    "short": "Priv-Esc",
+    "time_label": "control_privilege_escalation",
+    "event_label": "control_privilege_escalation",
+    "hierarchical_event_label": "control_privilege_escalation.0.",
+    "raw_time": 8.0
+  },
+  {
+    "time": 8,
+    "name": "Wazuh: Control host privilege escalation attempt",
+    "ip": "10.66.2.53",
+    "host": "control_gateway",
+    "short": "Priv-Esc",
+    "time_label": "control_privilege_escalation",
+    "event_label": "control_privilege_escalation",
+    "hierarchical_event_label": "control_privilege_escalation.0.",
+    "raw_time": 8.240000009536743
+  },
+  {
+    "time": 8,
+    "name": "Wazuh: Control host privilege escalation attempt",
+    "ip": "10.66.2.53",
+    "host": "control_gateway",
+    "short": "Priv-Esc",
+    "time_label": "control_privilege_escalation",
+    "event_label": "control_privilege_escalation",
+    "hierarchical_event_label": "control_privilege_escalation.0.",
+    "raw_time": 8.240000009536743
+  },
+  {
+    "time": 8,
+    "name": "Wazuh: Control host privilege escalation attempt",
+    "ip": "10.66.2.53",
+    "host": "control_gateway",
+    "short": "Priv-Esc",
+    "time_label": "control_privilege_escalation",
+    "event_label": "control_privilege_escalation",
+    "hierarchical_event_label": "control_privilege_escalation.0.",
+    "raw_time": 8.240000009536743
+  },
+  {
+    "time": 8,
+    "name": "Wazuh: Control host privilege escalation attempt",
+    "ip": "10.66.2.53",
+    "host": "control_gateway",
+    "short": "Priv-Esc",
+    "time_label": "control_privilege_escalation",
+    "event_label": "control_privilege_escalation",
+    "hierarchical_event_label": "control_privilege_escalation.0.",
+    "raw_time": 8.240000009536743
+  },
+  {
+    "time": 8,
+    "name": "Wazuh: Control host privilege escalation attempt",
+    "ip": "10.66.2.53",
+    "host": "control_gateway",
+    "short": "Priv-Esc",
+    "time_label": "control_privilege_escalation",
+    "event_label": "control_privilege_escalation",
+    "hierarchical_event_label": "control_privilege_escalation.0.",
+    "raw_time": 8.240000009536743
+  },
+  {
+    "time": 8,
+    "name": "Wazuh: Control host privilege escalation attempt",
+    "ip": "10.66.2.53",
+    "host": "control_gateway",
+    "short": "Priv-Esc",
+    "time_label": "control_privilege_escalation",
+    "event_label": "control_privilege_escalation",
+    "hierarchical_event_label": "control_privilege_escalation.0.",
+    "raw_time": 8.25
+  },
+  {
+    "time": 8,
+    "name": "Wazuh: Control host privilege escalation attempt",
+    "ip": "10.66.2.53",
+    "host": "control_gateway",
+    "short": "Priv-Esc",
+    "time_label": "control_privilege_escalation",
+    "event_label": "control_privilege_escalation",
+    "hierarchical_event_label": "control_privilege_escalation.0.",
+    "raw_time": 8.25
+  }
+]

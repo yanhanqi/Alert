@@ -1,0 +1,101 @@
+[
+  {
+    "time": 0,
+    "name": "SCADA IDS: DNP3/IEC104 reconnaissance against substation control network",
+    "ip": "10.66.1.35",
+    "host": "scada_firewall",
+    "short": "IEC104-Recon",
+    "time_label": "substation_recon",
+    "event_label": "substation_recon",
+    "hierarchical_event_label": "substation_recon.0.",
+    "raw_time": 0.0
+  },
+  {
+    "time": 0,
+    "name": "SCADA IDS: DNP3/IEC104 reconnaissance against substation control network",
+    "ip": "10.66.1.35",
+    "host": "scada_firewall",
+    "short": "IEC104-Recon",
+    "time_label": "substation_recon",
+    "event_label": "substation_recon",
+    "hierarchical_event_label": "substation_recon.0.",
+    "raw_time": 0.0
+  },
+  {
+    "time": 0,
+    "name": "SCADA IDS: DNP3/IEC104 reconnaissance against substation control network",
+    "ip": "10.66.1.35",
+    "host": "scada_firewall",
+    "short": "IEC104-Recon",
+    "time_label": "substation_recon",
+    "event_label": "substation_recon",
+    "hierarchical_event_label": "substation_recon.0.",
+    "raw_time": 0.0
+  },
+  {
+    "time": 0,
+    "name": "SCADA IDS: DNP3/IEC104 reconnaissance against substation control network",
+    "ip": "10.66.1.35",
+    "host": "scada_firewall",
+    "short": "IEC104-Recon",
+    "time_label": "substation_recon",
+    "event_label": "substation_recon",
+    "hierarchical_event_label": "substation_recon.0.",
+    "raw_time": 0.0
+  },
+  {
+    "time": 0,
+    "name": "SCADA IDS: DNP3/IEC104 reconnaissance against substation control network",
+    "ip": "10.66.1.35",
+    "host": "scada_firewall",
+    "short": "IEC104-Recon",
+    "time_label": "substation_recon",
+    "event_label": "substation_recon",
+    "hierarchical_event_label": "substation_recon.0.",
+    "raw_time": 0.0
+  },
+  {
+    "time": 0,
+    "name": "SCADA IDS: DNP3/IEC104 reconnaissance against substation control network",
+    "ip": "10.66.1.35",
+    "host": "scada_firewall",
+    "short": "IEC104-Recon",
+    "time_label": "substation_recon",
+    "event_label": "substation_recon",
+    "hierarchical_event_label": "substation_recon.0.",
+    "raw_time": 0.0
+  },
+  {
+    "time": 0,
+    "name": "SCADA IDS: DNP3/IEC104 reconnaissance against substation control network",
+    "ip": "10.66.1.35",
+    "host": "scada_firewall",
+    "short": "IEC104-Recon",
+    "time_label": "substation_recon",
+    "event_label": "substation_recon",
+    "hierarchical_event_label": "substation_recon.0.",
+    "raw_time": 0.0
+  },
+  {
+    "time": 0,
+    "name": "SCADA IDS: DNP3/IEC104 reconnaissance against substation control network",
+    "ip": "10.66.1.35",
+    "host": "scada_firewall",
+    "short": "IEC104-Recon",
+    "time_label": "substation_recon",
+    "event_label": "substation_recon",
+    "hierarchical_event_label": "substation_recon.0.",
+    "raw_time": 0.0
+  },
+  {
+    "time": 0,
+    "name": "SCADA IDS: DNP3/IEC104 reconnaissance against substation control network",
+    "ip": "10.66.1.35",
+    "host": "scada_firewall",
+    "short": "IEC104-Recon",
+    "time_label": "substation_recon",
+    "event_label": "substation_recon",
+    "hierarchical_event_label": "substation_recon.0.",
+    "raw_time": 0.0
+  }
+]

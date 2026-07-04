@@ -269,9 +269,9 @@ class BaseSequenceCollate:
             batch = {k: [d[k] for d in batch] for k in self.collate_fn_map}
         # apply the collate functions to the feature batches and return it as a TensorDict
         batch = TensorDict(
-            {k: self.collate_fn_map[k](batch[k]) for k in self.collate_fn_map}
+            {k: self.collate_fn_map[k](batch[k]) for k in self.collate_fn_map},
+            batch_size=(batch_size, context_size),
         )
-        batch.batch_size_ = (batch_size, context_size)
         return batch
 
 
@@ -316,13 +316,13 @@ class MaskedLangModelingSequenceCollate(BaseSequenceCollate):
     ) -> TensorDict[str, torch.Tensor]:
         batch = super().__call__(batch)
         # get batch size and sequence length
-        dim = batch.batch_size_
+        dim = batch.batch_size
         # draw random numbers to define target tokens
         mask = torch.rand(dim, generator=self.generator)
         # self.target_ratio of the tokens will be targets for prediction
         batch["mask"] = mask <= self.target_ratio
         # save indices of target tokens
-        batch["mask_index"] = torch.nonzero(batch["mask"]).t()
+        batch["mask_index"] = batch["mask"]
         # define permutation of self.perturb_ratio of the target tokens within each sequence
         perturb_mask = torch.logical_and(
             (self.target_ratio * self.mask_ratio) < mask,

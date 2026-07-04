@@ -1,0 +1,46 @@
+[
+  {
+    "time": 0,
+    "name": "Wazuh: Operator credential attack on control-center account",
+    "ip": "10.66.1.15",
+    "host": "control_center_hmi",
+    "short": "Op-Crack",
+    "time_label": "operator_account_attack",
+    "event_label": "operator_account_attack",
+    "hierarchical_event_label": "operator_account_attack.0.",
+    "raw_time": 0.4815070629119873
+  },
+  {
+    "time": 0,
+    "name": "Wazuh: Operator credential attack on control-center account",
+    "ip": "10.66.1.15",
+    "host": "control_center_hmi",
+    "short": "Op-Crack",
+    "time_label": "operator_account_attack",
+    "event_label": "operator_account_attack",
+    "hierarchical_event_label": "operator_account_attack.0.",
+    "raw_time": 0.4815549850463867
+  },
+  {
+    "time": 0,
+    "name": "Wazuh: Operator credential attack on control-center account",
+    "ip": "10.66.1.15",
+    "host": "control_center_hmi",
+    "short": "Op-Crack",
+    "time_label": "operator_account_attack",
+    "event_label": "operator_account_attack",
+    "hierarchical_event_label": "operator_account_attack.0.",
+    "raw_time": 0.49469804763793945
+  },
+  {
+    "time": 0,
+    "name": "Wazuh: Operator credential attack on control-center account",
+    "ip": "10.66.1.15",
+    "host": "control_center_hmi",
+    "short": "Op-Crack",
+    "time_label": "operator_account_attack",
+    "event_label": "operator_account_attack",
+    "hierarchical_event_label": "operator_account_attack.0.",
+    "raw_time": 0.4947469234466553
+  }
+]

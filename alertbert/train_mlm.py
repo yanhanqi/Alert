@@ -63,10 +63,11 @@ def train_model(
     for i, batch in enumerate(loader):
         batch = batch.to(device)
         batch = model(batch)
+        loss = model.loss
         optimizer.zero_grad()
-        batch["loss"].backward()
+        loss.backward()
         optimizer.step()
-        losses[i] = batch["loss"].item()
+        losses[i] = loss.item()
     return losses.mean(), losses.std()
 
 

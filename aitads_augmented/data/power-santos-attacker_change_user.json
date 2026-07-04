@@ -1,0 +1,189 @@
+[
+  {
+    "time": 0,
+    "name": "Wazuh: Unauthorized operator role switch detected",
+    "ip": "10.66.1.15",
+    "host": "control_center_hmi",
+    "short": "Role-Switch",
+    "time_label": "operator_role_switch",
+    "event_label": "operator_role_switch",
+    "hierarchical_event_label": "operator_role_switch.0.",
+    "raw_time": 0.0
+  },
+  {
+    "time": 0,
+    "name": "Wazuh: Unauthorized operator role switch detected",
+    "ip": "10.66.1.15",
+    "host": "control_center_hmi",
+    "short": "Role-Switch",
+    "time_label": "operator_role_switch",
+    "event_label": "operator_role_switch",
+    "hierarchical_event_label": "operator_role_switch.0.",
+    "raw_time": 0.0
+  },
+  {
+    "time": 0,
+    "name": "Wazuh: Unauthorized operator role switch detected",
+    "ip": "10.66.1.15",
+    "host": "control_center_hmi",
+    "short": "Role-Switch",
+    "time_label": "operator_role_switch",
+    "event_label": "operator_role_switch",
+    "hierarchical_event_label": "operator_role_switch.0.",
+    "raw_time": 0.0
+  },
+  {
+    "time": 0,
+    "name": "Wazuh: Unauthorized operator role switch detected",
+    "ip": "10.66.1.15",
+    "host": "control_center_hmi",
+    "short": "Role-Switch",
+    "time_label": "operator_role_switch",
+    "event_label": "operator_role_switch",
+    "hierarchical_event_label": "operator_role_switch.0.",
+    "raw_time": 0.0
+  },
+  {
+    "time": 0,
+    "name": "Wazuh: Unauthorized operator role switch detected",
+    "ip": "10.66.1.15",
+    "host": "control_center_hmi",
+    "short": "Role-Switch",
+    "time_label": "operator_role_switch",
+    "event_label": "operator_role_switch",
+    "hierarchical_event_label": "operator_role_switch.0.",
+    "raw_time": 0.0
+  },
+  {
+    "time": 0,
+    "name": "Wazuh: Unauthorized operator role switch detected",
+    "ip": "10.66.1.15",
+    "host": "control_center_hmi",
+    "short": "Role-Switch",
+    "time_label": "operator_role_switch",
+    "event_label": "operator_role_switch",
+    "hierarchical_event_label": "operator_role_switch.0.",
+    "raw_time": 0.0
+  },
+  {
+    "time": 0,
+    "name": "Wazuh: Unauthorized operator role switch detected",
+    "ip": "10.66.1.15",
+    "host": "control_center_hmi",
+    "short": "Role-Switch",
+    "time_label": "operator_role_switch",
+    "event_label": "operator_role_switch",
+    "hierarchical_event_label": "operator_role_switch.0.",
+    "raw_time": 0.0
+  },
+  {
+    "time": 0,
+    "name": "Wazuh: Unauthorized operator role switch detected",
+    "ip": "10.66.1.15",
+    "host": "control_center_hmi",
+    "short": "Role-Switch",
+    "time_label": "operator_role_switch",
+    "event_label": "operator_role_switch",
+    "hierarchical_event_label": "operator_role_switch.0.",
+    "raw_time": 0.0
+  },
+  {
+    "time": 0,
+    "name": "Wazuh: Unauthorized operator role switch detected",
+    "ip": "10.66.1.15",
+    "host": "control_center_hmi",
+    "short": "Role-Switch",
+    "time_label": "operator_role_switch",
+    "event_label": "operator_role_switch",
+    "hierarchical_event_label": "operator_role_switch.0.",
+    "raw_time": 0.6600000858306885
+  },
+  {
+    "time": 0,
+    "name": "Wazuh: Unauthorized operator role switch detected",
+    "ip": "10.66.1.15",
+    "host": "control_center_hmi",
+    "short": "Role-Switch",
+    "time_label": "operator_role_switch",
+    "event_label": "operator_role_switch",
+    "hierarchical_event_label": "operator_role_switch.0.",
+    "raw_time": 0.6600000858306885
+  },
+  {
+    "time": 0,
+    "name": "Wazuh: Unauthorized operator role switch detected",
+    "ip": "10.66.1.15",
+    "host": "control_center_hmi",
+    "short": "Role-Switch",
+    "time_label": "operator_role_switch",
+    "event_label": "operator_role_switch",
+    "hierarchical_event_label": "operator_role_switch.0.",
+    "raw_time": 0.6600000858306885
+  },
+  {
+    "time": 0,
+    "name": "Wazuh: Unauthorized operator role switch detected",
+    "ip": "10.66.1.15",
+    "host": "control_center_hmi",
+    "short": "Role-Switch",
+    "time_label": "operator_role_switch",
+    "event_label": "operator_role_switch",
+    "hierarchical_event_label": "operator_role_switch.0.",
+    "raw_time": 0.75
+  },
+  {
+    "time": 0,
+    "name": "Wazuh: Unauthorized operator role switch detected",
+    "ip": "10.66.1.15",
+    "host": "control_center_hmi",
+    "short": "Role-Switch",
+    "time_label": "operator_role_switch",
+    "event_label": "operator_role_switch",
+    "hierarchical_event_label": "operator_role_switch.0.",
+    "raw_time": 0.75
+  },
+  {
+    "time": 0,
+    "name": "Wazuh: Unauthorized operator role switch detected",
+    "ip": "10.66.1.15",
+    "host": "control_center_hmi",
+    "short": "Role-Switch",
+    "time_label": "operator_role_switch",
+    "event_label": "operator_role_switch",
+    "hierarchical_event_label": "operator_role_switch.0.",
+    "raw_time": 0.75
+  },
+  {
+    "time": 0,
+    "name": "Wazuh: Unauthorized operator role switch detected",
+    "ip": "10.66.1.15",
+    "host": "control_center_hmi",
+    "short": "Role-Switch",
+    "time_label": "operator_role_switch",
+    "event_label": "operator_role_switch",
+    "hierarchical_event_label": "operator_role_switch.0.",
+    "raw_time": 0.75
+  },
+  {
+    "time": 1,
+    "name": "Wazuh: Unauthorized operator role switch detected",
+    "ip": "10.66.1.15",
+    "host": "control_center_hmi",
+    "short": "Role-Switch",
+    "time_label": "operator_role_switch",
+    "event_label": "operator_role_switch",
+    "hierarchical_event_label": "operator_role_switch.0.",
+    "raw_time": 1.0199999809265137
+  },
+  {
+    "time": 1,
+    "name": "Wazuh: Unauthorized operator role switch detected",
+    "ip": "10.66.1.15",
+    "host": "control_center_hmi",
+    "short": "Role-Switch",
+    "time_label": "operator_role_switch",
+    "event_label": "operator_role_switch",
+    "hierarchical_event_label": "operator_role_switch.0.",
+    "raw_time": 1.0199999809265137
+  }
+]

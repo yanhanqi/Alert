@@ -652,7 +652,12 @@ class MaskedLanguageModel(nn.ModuleDict):
             for t in params["targets"]:
                 self["head"].linear[t].weight = self["embedding"].embeddings[t].weight
 
-    def forward(self, **src: dict[str, torch.Tensor]) -> tuple[torch.Tensor]:
+    def forward(
+        self, *args: torch.Tensor, **src: dict[str, torch.Tensor]
+    ) -> tuple[torch.Tensor]:
+        if args:
+            input_keys = list(self["embedding"].features) + [self.encoding]
+            src |= dict(zip(input_keys, args))
         x = self.embedding(**src)
         x = self.encoder(x, p=src[self.encoding] if self.rotary_pos_enc else None)
         return self.head(x)
@@ -704,17 +709,22 @@ class MaskedLangModelInferenceWrapper(TensorDictModule):
         model: MaskedLanguageModel,
         layers: Sequence[str] = ("embedding", "encoder"),
     ) -> None:
+        self.input_keys = list(model["embedding"].features) + [model.encoding]
         super().__init__(
             nn.Sequential(OrderedDict({layer: model[layer] for layer in layers})),
-            in_keys={f: f for f in model["embedding"].features + [model.encoding]},
+            in_keys=self.input_keys,
             out_keys=["output"],
         )
         self.encoding = model.encoding
         self.module.forward = self._star_forward
 
     @torch.no_grad()
-    def _star_forward(self, **x: dict[str, torch.Tensor]) -> torch.Tensor:
+    def _star_forward(
+        self, *args: torch.Tensor, **x: dict[str, torch.Tensor]
+    ) -> torch.Tensor:
         """This function is used to override the forward method of the nn.Sequential module to make it compatible with varying numbers of input arguments."""
+        if args:
+            x |= dict(zip(self.input_keys, args))
         p = x.get(self.encoding, None)
         x = self.module[0](**x)
         for module in self.module[1:]:
@@ -774,10 +784,12 @@ class MaskedLangModelEvalWrapper(TensorDictModule):
     """
 
     def __init__(self, model: MaskedLanguageModel) -> None:
+        self.input_keys = [f"{f}_mask" for f in model["embedding"].features] + [
+            model.encoding
+        ]
         super().__init__(
             model,
-            in_keys={f"{f}_mask": f for f in model["embedding"].features}
-            | {model.encoding: model.encoding},
+            in_keys=self.input_keys,
             out_keys=[f"{t}_pred" for t in model["head"].targets],
         )
         self.true_target_keys = [f"{t}_true" for t in model["head"].targets]
@@ -786,12 +798,20 @@ class MaskedLangModelEvalWrapper(TensorDictModule):
     def forward(
         self, batch: TensorDict[str, torch.Tensor]
     ) -> TensorDict[str, torch.Tensor]:
-        mask_idx = torch.unbind(batch["mask_index"])
+        mask_idx = batch["mask_index"]
+        if mask_idx.dtype == torch.bool:
+            mask_idx = torch.nonzero(mask_idx, as_tuple=True)
+        else:
+            mask_idx = torch.unbind(mask_idx)
         batch = super().forward(batch)
+        self.true_targets = []
+        self.masked_outputs = []
         for t, k in zip(self.module["head"].targets, self.true_target_keys):
-            batch[k] = self.module["head"].vocabs[t].compute_targets(batch[t][mask_idx])
+            self.true_targets.append(
+                self.module["head"].vocabs[t].compute_targets(batch[t][mask_idx])
+            )
         for k, m in zip(self.out_keys, self.masked_out_keys):
-            batch[m] = batch[k][mask_idx]
+            self.masked_outputs.append(batch[k][mask_idx])
         return batch
 
 
@@ -812,9 +832,9 @@ class MaskedLangModelTrainWrapper(MaskedLangModelEvalWrapper):
         self, batch: TensorDict[str, torch.Tensor]
     ) -> TensorDict[str, torch.Tensor]:
         batch = super().forward(batch)
-        batch["loss"] = self.loss_fn(
-            tuple(batch[k] for k in self.masked_out_keys),
-            tuple(batch[t] for t in self.true_target_keys),
+        self.loss = self.loss_fn(
+            tuple(self.masked_outputs),
+            tuple(self.true_targets),
         )
         return batch
 
@@ -1473,6 +1493,7 @@ class AlertBERT(AbstractDatasetGroupingModel):
         num_contexts = len(data) // self.readout
         remainder = len(data) % self.readout
         embeddings = []
+        device = next(self.model.parameters()).device
 
         for i in range(num_contexts):
             batch = self.collate_fn(
@@ -1482,7 +1503,7 @@ class AlertBERT(AbstractDatasetGroupingModel):
                         + self.padding
                     ]
                 ]
-            )
+            ).to(device)
             batch = self.model(batch)
             embeddings.append(
                 batch["output"][0, self.padding : -self.padding].cpu().numpy()
@@ -1492,7 +1513,7 @@ class AlertBERT(AbstractDatasetGroupingModel):
             assert len(data) - (i + 1) * self.readout == remainder
             batch = self.collate_fn(
                 [data[(i + 1) * self.readout - self.padding : len(data) + self.padding]]
-            )
+            ).to(device)
             batch = self.model(batch)
             embeddings.append(
                 batch["output"][0, self.padding : -self.padding].cpu().numpy()

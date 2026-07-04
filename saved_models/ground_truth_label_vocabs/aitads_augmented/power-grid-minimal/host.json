@@ -1,0 +1,20 @@
+{
+    "inet-firewall": 43940,
+    "intranet_server": 34448,
+    "mail": 22780,
+    "vpn": 12212,
+    "internal_share": 11250,
+    "webserver": 5878,
+    "butcherrowe_mail": 4222,
+    "watkins_mail": 3217,
+    "smith_mail": 3049,
+    "davey_mail": 2494,
+    "hayes_mail": 2155,
+    "rogersturnbull_mail": 1489,
+    "morris_mail": 1108,
+    "inet-dns": 899,
+    "cloud_share": 136,
+    "walker_mail": 49,
+    "collinsbecker_mail": 48,
+    "monitoring": 31
+}

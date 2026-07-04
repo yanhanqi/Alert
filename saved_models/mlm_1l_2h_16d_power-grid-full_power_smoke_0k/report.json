@@ -1,0 +1,103 @@
+{
+    "model": "mlm_1l_2h_16d_power-grid-full_power_smoke_0k",
+    "timestamp": "2026-07-03 18:41:10.178113",
+    "epochs": 10,
+    "training": {
+        "short": {
+            "loss": 1.4000449263994603,
+            "accuracy": 0.5543873940381335,
+            "top_2_accuracy": 0.7141511595346588,
+            "top_3_accuracy": 0.8999312679785149,
+            "matthews_corrcoef": 0.39286385761439285,
+            "macro_precision": 0.8109219236538515,
+            "macro_recall": 0.3368564575328353,
+            "macro_f1": 0.4151145994247795
+        },
+        "host": {
+            "loss": 1.6942099735413538,
+            "accuracy": 0.57195224397322,
+            "top_2_accuracy": 0.7848942290558256,
+            "top_3_accuracy": 0.8003716620421047,
+            "matthews_corrcoef": 0.5342225469167853,
+            "macro_precision": 0.885391416558777,
+            "macro_recall": 0.40326647074337324,
+            "macro_f1": 0.446098618885286
+        }
+    },
+    "validation": {
+        "short": {
+            "loss": 1.616966888126466,
+            "accuracy": 0.48846642556934805,
+            "top_2_accuracy": 0.5526830221874695,
+            "top_3_accuracy": 0.6233994721923566,
+            "matthews_corrcoef": 0.3981631518676681,
+            "macro_precision": 0.8521762935467477,
+            "macro_recall": 0.3752173694439005,
+            "macro_f1": 0.4339950824803398
+        },
+        "host": {
+            "loss": 1.6560290779096618,
+            "accuracy": 0.6575114847033525,
+            "top_2_accuracy": 0.735900693969309,
+            "top_3_accuracy": 0.7597009090020526,
+            "matthews_corrcoef": 0.5115019027750339,
+            "macro_precision": 0.8614177960235915,
+            "macro_recall": 0.31447521428097935,
+            "macro_f1": 0.38265222750423616
+        }
+    },
+    "params": {
+        "augment": "power-grid-full",
+        "context_size": 4096,
+        "batch_size": 16,
+        "features": [
+            "short",
+            "host"
+        ],
+        "targets": [
+            "short",
+            "host"
+        ],
+        "sampling": "index",
+        "min_freq": 10,
+        "n_heads": 2,
+        "dim_per_head": 16,
+        "num_layers": 1,
+        "feedforward_factor": 4,
+        "activation": "gelu",
+        "gated_activation": true,
+        "encoding": "raw_time",
+        "encoding_type": "rotary",
+        "rotary_max_exp": 14,
+        "rotary_cutoff": 0.75,
+        "biases": false,
+        "head_bias": true,
+        "tie_weights": true,
+        "emb_init_std": 0.1767766952966369,
+        "optimizer": "adam",
+        "scheduler": "linear",
+        "lr": 0.005,
+        "warm_up_steps": 2,
+        "decay": 0.1,
+        "momentum": 0.9,
+        "gamma": null,
+        "class_balance": 2.0,
+        "target_ratio": 0.2,
+        "mask_ratio": 0.8,
+        "perturb_ratio": 0.1,
+        "path": "saved_models",
+        "log": null,
+        "d_model": 32,
+        "dim_feedforward": 128,
+        "encoding_freqs": [
+            1.0,
+            0.29730177875068026,
+            0.08838834764831845,
+            0.026278012976678578,
+            0.0078125,
+            0.0023226701464896895
+        ],
+        "updates": 10,
+        "id": "1l_2h_16d_power-grid-full_power_smoke"
+    }
+}
