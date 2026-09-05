@@ -4,6 +4,7 @@ import json
 from pathlib import Path
 
 import pandas as pd
+from alertbert.aitads import AITAlertDatasetAugmented
 from sklearn.ensemble import IsolationForest
 from sklearn.metrics import (
     accuracy_score,
@@ -17,8 +18,11 @@ from sklearn.metrics import (
 )
 
 
-DATA_DIR = Path(__file__).resolve().parents[1] / "aitads_augmented" / "data"
+PROJECT_ROOT = Path(__file__).resolve().parents[1]
+AITADS_A_DIR = PROJECT_ROOT / "aitads_augmented"
 SCENARIO = "russellmitchell"
+DATASET_SPLIT = "test"
+SCENARIO_INDEX = 1
 BASE_CATEGORICAL_FEATURES = ("ip", "host", "short")
 EXPANDED_CATEGORICAL_FEATURES = ("ip", "host", "short", "name")
 EXPANDED_NUMERIC_FEATURES = ("time", "raw_time")
@@ -38,6 +42,29 @@ def load_alerts(files):
     if not alerts:
         raise ValueError("No alerts loaded; check DATA_DIR and SCENARIO.")
     return alerts
+
+
+def load_original_aitads_scenario():
+    """Reconstruct one original AIT-ADS scenario with the official loader."""
+    dataset = AITAlertDatasetAugmented(
+        split=DATASET_SPLIT,
+        configuration="original",
+        path=str(AITADS_A_DIR),
+    )
+    scenario_template = dataset.config[DATASET_SPLIT][SCENARIO_INDEX]
+    fragment_names = [
+        name
+        for day in scenario_template
+        for name in day["noise"] + [attack[0] for attack in day["attacks"]]
+    ]
+    if not fragment_names or any(
+        not name.startswith(f"{SCENARIO}-") for name in fragment_names
+    ):
+        raise ValueError(
+            f"Scenario index {SCENARIO_INDEX} does not refer to {SCENARIO}."
+        )
+    scenario = dataset.scenarios[SCENARIO_INDEX]
+    return pd.DataFrame({field: values for field, values in scenario.data.items()})
 
 
 def build_features(data, categorical_fields, numeric_fields=()):
@@ -88,9 +115,7 @@ def evaluate(features, labels, contamination):
 
 
 def main():
-    files = sorted(DATA_DIR.glob(f"{SCENARIO}-*.json"))
-    alerts = load_alerts(files)
-    data = pd.DataFrame(alerts)
+    data = load_original_aitads_scenario()
     required = (
         set(EXPANDED_CATEGORICAL_FEATURES)
         | set(EXPANDED_NUMERIC_FEATURES)
@@ -110,8 +135,9 @@ def main():
             "0 < contamination <= 0.5. The ratio will not be silently capped."
         )
 
-    print(f"Scenario: {SCENARIO}; JSON files: {len(files)}")
-    print(f"Alerts: {len(alerts)}; noise: {(labels == 0).sum()}; non-noise: {labels.sum()}")
+    print(f"Dataset: AIT-ADS reconstructed by configuration=original")
+    print(f"Scenario: {SCENARIO}; split: {DATASET_SPLIT}")
+    print(f"Alerts: {len(data)}; noise: {(labels == 0).sum()}; non-noise: {labels.sum()}")
     print(f"Contamination (ground-truth non-noise ratio): {contamination:.6f}")
     print("Evaluation: fit and evaluate on the same data; positive = non-noise")
 
