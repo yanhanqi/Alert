@@ -45,6 +45,7 @@ def load_alerts(files):
     return alerts
 
 
+# 无法处理新类别
 def build_features(data, categorical_fields, numeric_fields=()):
     """Encode categorical frequencies and scale numeric fields to [0, 1]."""
     selected_fields = set(categorical_fields) | set(numeric_fields)
@@ -155,6 +156,71 @@ def merge_duplicate_alerts(data, window_seconds=MERGE_WINDOW_SECONDS):
     membership[ordered["_position"].to_numpy()] = ordered["_merge_group"].map(new_ids).to_numpy()
     representatives = representatives.drop(columns=["_position", "_merge_group"])
     return representatives, membership
+
+
+def prioritize_alerts(alerts, contamination="auto"):
+    """Rank one JSON-array window using duplicate merging and the existing 10 features.
+
+    Labels are not required or inspected. Unlike the labelled experiment below,
+    the callable uses an automatic threshold unless a fixed ratio is supplied.
+    Member indices refer to positions in the input array; IDs persist across
+    windows when the caller supplies alert_id. Scores are local to this window.
+    """
+    if not isinstance(alerts, list) or any(not isinstance(row, dict) for row in alerts):
+        raise ValueError("Expected a JSON array of alert objects, not a JSON string.")
+    if contamination != "auto":
+        if (isinstance(contamination, bool) or not isinstance(contamination, (int, float))
+                or not np.isfinite(contamination) or not 0 < contamination <= 0.5):
+            raise ValueError("contamination must be 'auto' or a number in (0, 0.5].")
+    result = dict(input_count=len(alerts), contamination=contamination,
+                  score_threshold=None, ranked=[], high_priority=[], low_priority=[])
+    if not alerts:
+        return result
+
+    data = pd.DataFrame(alerts)
+    required = set(EXPANDED_CATEGORICAL_FEATURES) | set(EXPANDED_NUMERIC_FEATURES)
+    missing = required - set(data.columns)
+    if missing:
+        raise ValueError(f"Missing priority fields: {sorted(missing)}")
+    for field in EXPANDED_NUMERIC_FEATURES:
+        values = pd.to_numeric(data[field], errors="raise")
+        if not np.isfinite(values.to_numpy(dtype=float)).all():
+            raise ValueError(f"{field} must contain finite timestamps.")
+        data[field] = values
+    ids = [row.get("alert_id", f"input:{i}") for i, row in enumerate(alerts)]
+    if any(not isinstance(value, str) or not value for value in ids) or len(set(ids)) != len(ids):
+        raise ValueError("alert_id values must be unique nonempty strings.")
+
+    merged, membership = merge_duplicate_alerts(data)
+    features = pd.concat([
+        build_features(merged, EXPANDED_CATEGORICAL_FEATURES, EXPANDED_NUMERIC_FEATURES),
+        build_host_context(merged),
+    ], axis=1)
+    model = IsolationForest(n_estimators=200, contamination=contamination,
+                            random_state=42, n_jobs=-1)
+    predictions = model.fit_predict(features)
+    scores = -model.score_samples(features)
+    result["score_threshold"] = float(-model.offset_)
+    members = [[] for _ in range(len(merged))]
+    for position, group in enumerate(membership):
+        members[group].append(position)
+    for group in np.argsort(-scores, kind="stable"):
+        positions = members[group]
+        representative = max(positions, key=lambda i: (data.iloc[i]["raw_time"], i))
+        item = dict(
+            alert=dict(alerts[representative]),
+            alert_id=ids[representative],
+            member_indices=positions,
+            member_ids=[ids[i] for i in positions],
+            merged_count=len(positions),
+            merge_start_time=float(merged.iloc[group]["merge_start_time"]),
+            merge_end_time=float(merged.iloc[group]["merge_end_time"]),
+            anomaly_score=float(scores[group]),
+            priority="high" if predictions[group] == -1 else "low",
+        )
+        result["ranked"].append(item)
+        result[f"{item['priority']}_priority"].append(item)
+    return result
 
 
 def prediction_metrics(labels, predictions, anomaly_scores):
