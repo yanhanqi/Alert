@@ -201,25 +201,31 @@ def run_storm_pipeline(alerts, *, threshold=1000, start_time=None, max_rounds=No
             yield record
 
 
-def load_scenarios(configuration="simul-attacks", split="test", scenario_index=None):
+def load_scenarios(configuration="simul-attacks", split="test", scenario_index=None, dataset_path=None):
     """Use the repository loader's configured offsets, never concatenate relative fragments."""
     import pandas as pd
     from alertbert.aitads import AITAlertDatasetAugmented
 
     dataset = AITAlertDatasetAugmented(
-        split=split, configuration=configuration, path=str(ROOT / "aitads_augmented")
+        split=split, configuration=configuration,
+        path=str(dataset_path if dataset_path is not None else ROOT / "aitads_augmented")
     )
     indices = range(dataset.n_scenarios) if scenario_index is None else [scenario_index]
     for index in indices:
         if not 0 <= index < dataset.n_scenarios:
             raise ValueError(f"scenario_index must be in [0, {dataset.n_scenarios}).")
-        yield f"{configuration}:{split}:{index}", pd.DataFrame(dataset.scenarios[index].data).to_dict("records")
+        # Preserve JSON nulls instead of inferring nullable string columns as NaN.
+        yield f"{configuration}:{split}:{index}", pd.DataFrame(
+            dataset.scenarios[index].data, dtype=object
+        ).to_dict("records")
 
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--input", type=Path, help="JSON array with unified timestamps; otherwise use configured AIT-ADS-A.")
     parser.add_argument("--configuration", default="simul-attacks")
+    parser.add_argument("--dataset-path", type=Path, default=ROOT / "aitads_augmented",
+                        help="AIT-ADS-A directory containing configs/ and data/.")
     parser.add_argument("--split", choices=("train", "val", "test", "all"), default="test")
     parser.add_argument("--scenario-index", type=int, help="Zero-based scenario index; default: every scenario in split separately.")
     parser.add_argument("--start-time", type=float, help="Unix timestamp of the first round; default: floor first alert to 30 minutes.")
@@ -233,7 +239,7 @@ def main():
         with args.input.open(encoding="utf-8") as handle:
             streams = [(args.input.stem, json.load(handle))]
     else:
-        streams = load_scenarios(args.configuration, args.split, args.scenario_index)
+        streams = load_scenarios(args.configuration, args.split, args.scenario_index, args.dataset_path)
     output_context = args.output.open("x", encoding="utf-8") if args.output else nullcontext(None)
     with output_context as output:
         print("Window=600s; step=60s; round=1800s; priority only; results available at window end.")
