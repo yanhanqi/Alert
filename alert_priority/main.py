@@ -1,5 +1,6 @@
-"""Single-scenario Isolation Forest experiment with label-informed contamination."""
+"""Single-scenario Isolation Forest experiment and label-free priority API."""
 
+import argparse
 import json
 from collections import Counter, deque
 from pathlib import Path
@@ -29,6 +30,7 @@ NOISE_LABEL = "-"
 CONTEXT_WINDOW_SECONDS = 600
 MERGE_WINDOW_SECONDS = 600
 MERGE_KEYS = ("ip", "host", "short")
+DEFAULT_CONTAMINATION = 0.20
 
 
 def load_alerts(files):
@@ -158,11 +160,11 @@ def merge_duplicate_alerts(data, window_seconds=MERGE_WINDOW_SECONDS):
     return representatives, membership
 
 
-def prioritize_alerts(alerts, contamination="auto"):
+def prioritize_alerts(alerts, contamination=DEFAULT_CONTAMINATION):
     """Rank one JSON-array window using duplicate merging and the existing 10 features.
 
     Labels are not required or inspected. Unlike the labelled experiment below,
-    the callable uses an automatic threshold unless a fixed ratio is supplied.
+    the callable defaults to a manually fixed 20% contamination ratio.
     Member indices refer to positions in the input array; IDs persist across
     windows when the caller supplies alert_id. Scores are local to this window.
     """
@@ -238,6 +240,36 @@ def prediction_metrics(labels, predictions, anomaly_scores):
     return metrics, confusion
 
 
+def priority_count_summary(confusion):
+    """Summarize truth and predicted priority counts from TN, FP, FN, TP."""
+    tn, fp, fn, tp = map(int, confusion)
+    return {
+        "total_groups": tn + fp + fn + tp,
+        "attack_groups": tp + fn,
+        "noise_groups": tn + fp,
+        "high_priority_groups": tp + fp,
+        "low_priority_groups": fn + tn,
+        "correctly_classified_groups": tp + tn,
+        "incorrectly_classified_groups": fp + fn,
+        "attack_groups_correct_high": tp,
+        "noise_groups_correct_low": tn,
+    }
+
+
+def print_priority_counts(confusion, unit="alerts"):
+    """Display the truth-by-priority table; positive predictions mean high priority."""
+    tn, fp, fn, tp = map(int, confusion)
+    summary = priority_count_summary(confusion)
+    print(f"Priority counts ({unit}): high={tp + fp}, low={fn + tn}, total={tn + fp + fn + tp}")
+    print(f"Attack: high={tp}, low={fn}; noise: high={fp}, low={tn}")
+    print(
+        f"Correctly classified ({unit}): {summary['correctly_classified_groups']} "
+        f"/{summary['total_groups']} "
+        f"(attack→high={summary['attack_groups_correct_high']}, "
+        f"noise→low={summary['noise_groups_correct_low']})"
+    )
+
+
 def evaluate(features, labels, contamination, return_scores=False):
     """Fit one Isolation Forest and return its in-sample metrics."""
     model = IsolationForest(
@@ -254,13 +286,37 @@ def evaluate(features, labels, contamination, return_scores=False):
     return metrics, confusion, predictions
 
 
-def evaluate_merged_alerts(data, labels):
+def validate_contamination(value):
+    """Validate a fixed Isolation Forest contamination ratio."""
+    if (isinstance(value, bool) or not isinstance(value, (int, float))
+            or not np.isfinite(value) or not 0 < value <= 0.5):
+        raise ValueError("contamination must be a number in (0, 0.5].")
+    return float(value)
+
+
+def resolve_contamination(value, labels):
+    """Resolve CLI contamination without using labels for fixed or auto modes."""
+    if value == "label_rate":
+        return float(np.mean(labels))
+    if value == "auto":
+        return value
+    return validate_contamination(float(value))
+
+
+def evaluate_merged_alerts(data, labels, contamination=DEFAULT_CONTAMINATION):
     merged, membership = merge_duplicate_alerts(data)
     sizes = np.bincount(membership, minlength=len(merged))
     attack_counts = np.bincount(membership, weights=np.asarray(labels), minlength=len(merged))
     merged_labels = (attack_counts > 0).astype(int)
     mixed = (attack_counts > 0) & (attack_counts < sizes)
-    contamination = float(merged_labels.mean())
+    if contamination is None or contamination == "label_rate":
+        contamination = float(merged_labels.mean())
+        contamination_source = "merged-group label rate (offline legacy mode)"
+    elif contamination == "auto":
+        contamination_source = "Isolation Forest auto mode"
+    else:
+        contamination = validate_contamination(contamination)
+        contamination_source = "fixed manually configured ratio"
     print("\n[Duplicate merge preprocessing]")
     print(f"Merge keys: {', '.join(MERGE_KEYS)}; consecutive gap <= {MERGE_WINDOW_SECONDS}s")
     print("Session merging may span more than 600s; representative = last alert.")
@@ -268,9 +324,9 @@ def evaluate_merged_alerts(data, labels):
     print(f"Alerts: {len(data)} -> {len(merged)}; reduction: {1 - len(merged) / len(data):.2%}")
     print(f"Attack groups: {merged_labels.sum()}; noise groups: {(merged_labels == 0).sum()}")
     print(f"Mixed-label groups: {mixed.sum()}; group truth = contains any attack")
-    print(f"Contamination (merged-group non-noise ratio): {contamination:.6f}")
-    if not 0 < contamination <= 0.5:
-        raise ValueError("Merged-group non-noise ratio must be in (0, 0.5].")
+    print(f"Contamination setting: {contamination} ({contamination_source})")
+    if contamination != "auto" and not 0 < contamination <= 0.5:
+        raise ValueError("Contamination must be in (0, 0.5] or 'auto'.")
 
     features = pd.concat([
         build_features(merged, EXPANDED_CATEGORICAL_FEATURES, EXPANDED_NUMERIC_FEATURES),
@@ -286,19 +342,37 @@ def evaluate_merged_alerts(data, labels):
     tn, fp, fn, tp = confusion
     print(f"TN={tn}, FP={fp}, FN={fn}, TP={tp}")
 
+    print_priority_counts(confusion, unit="merged groups")
+
     raw_metrics, raw_confusion = prediction_metrics(labels, predictions[membership], scores[membership])
     print("\n[Merged model predictions mapped back to original alerts]")
     for name, value in raw_metrics.items():
         print(f"{name}: {value:.6f}")
     tn, fp, fn, tp = raw_confusion
     print(f"TN={tn}, FP={fp}, FN={fn}, TP={tp}")
+    print_priority_counts(raw_confusion, unit="original alerts")
     return raw_metrics
 
 
 def main():
-    files = sorted(DATA_DIR.glob(f"{SCENARIO}-*.json"))
-    alerts = load_alerts(files)
-    data = pd.DataFrame(alerts)
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--csv", type=Path, help="Labelled AIT-ADS CSV (including *_alerts.txt).")
+    parser.add_argument("--scenario", default=SCENARIO)
+    parser.add_argument(
+        "--contamination", default=str(DEFAULT_CONTAMINATION),
+        help="Fixed ratio in (0, 0.5], 'auto', or 'label_rate' for legacy offline evaluation.",
+    )
+    args = parser.parse_args()
+    if args.csv:
+        data = pd.read_csv(args.csv, keep_default_na=False)
+        data["time"] = pd.to_numeric(data["time"], errors="raise")
+        if not np.isfinite(data["time"].to_numpy(dtype=float)).all():
+            raise ValueError("CSV timestamps must be finite.")
+        data["raw_time"] = data["time"].astype(float)
+        data = data.sort_values("raw_time", kind="stable").reset_index(drop=True)
+    else:
+        files = sorted(DATA_DIR.glob(f"{args.scenario}-*.json"))
+        data = pd.DataFrame(load_alerts(files))
     required = (
         set(EXPANDED_CATEGORICAL_FEATURES)
         | set(EXPANDED_NUMERIC_FEATURES)
@@ -311,20 +385,21 @@ def main():
         raise ValueError("Every alert needs an event_label for evaluation.")
 
     labels = data["event_label"].ne(NOISE_LABEL).astype(int)
-    contamination = float(labels.mean())
-    if not 0 < contamination <= 0.5:
-        raise ValueError(
-            f"Non-noise ratio is {contamination:.6f}; IsolationForest requires "
-            "0 < contamination <= 0.5. The ratio will not be silently capped."
-        )
+    contamination = resolve_contamination(args.contamination, labels)
 
-    print(f"Scenario: {SCENARIO}; JSON files: {len(files)}")
-    print(f"Alerts: {len(alerts)}; noise: {(labels == 0).sum()}; non-noise: {labels.sum()}")
-    print(f"Contamination (ground-truth non-noise ratio): {contamination:.6f}")
+    print(f"Scenario: {args.scenario}; source: {args.csv or DATA_DIR}")
+    print(f"Alerts: {len(data)}; noise: {(labels == 0).sum()}; non-noise: {labels.sum()}")
+    if args.contamination == "label_rate":
+        print(f"Contamination (ground-truth non-noise ratio; legacy): {contamination:.6f}")
+    else:
+        print(f"Contamination setting: {contamination} (labels excluded from parameter selection)")
     print("Evaluation: fit and evaluate on the same data; positive = non-noise")
     print(f"Host context window: [t - {CONTEXT_WINDOW_SECONDS}s, t); excludes time ties")
-    print("Context is exploratory: fragment-relative timestamps are merged without offsets;")
-    print("these counts do not represent the original scenario's chronological history.")
+    if args.csv:
+        print("Original absolute timestamps; raw_time copies time at second precision.")
+    else:
+        print("Context is exploratory: fragment-relative timestamps are merged without offsets;")
+        print("these counts do not represent the original scenario's chronological history.")
 
     baseline = build_features(data, BASE_CATEGORICAL_FEATURES)
     expanded = build_features(data, EXPANDED_CATEGORICAL_FEATURES, EXPANDED_NUMERIC_FEATURES)
@@ -347,6 +422,7 @@ def main():
             print(f"{name}: {value:.6f}")
         tn, fp, fn, tp = confusion
         print(f"TN={tn}, FP={fp}, FN={fn}, TP={tp}")
+        print_priority_counts(confusion, unit="original alerts")
         print(f"Predicted non-noise: {predictions.sum()} ({predictions.mean():.2%})")
 
     print("\n[Expanded - Baseline]")
@@ -368,7 +444,7 @@ def main():
         print(f"{name}: {difference:+.6f}")
 
 
-    merged_raw_metrics = evaluate_merged_alerts(data, labels)
+    merged_raw_metrics = evaluate_merged_alerts(data, labels, contamination=contamination)
     print("\n[Merged - unmerged 10-feature model; both evaluated on original alerts]")
     for name, value in merged_raw_metrics.items():
         difference = value - results["Expanded + host context + host-short count"][name]

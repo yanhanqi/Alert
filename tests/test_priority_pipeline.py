@@ -56,6 +56,27 @@ class PriorityApiTests(unittest.TestCase):
             with self.subTest(rows=rows), self.assertRaises((ValueError, TypeError)):
                 self.rank(rows)
 
+    def test_priority_count_summary_distinguishes_group_totals_and_correct_groups(self):
+        summary = priority.priority_count_summary([8, 2, 1, 4])
+        self.assertEqual(summary, {
+            "total_groups": 15,
+            "attack_groups": 5,
+            "noise_groups": 10,
+            "high_priority_groups": 6,
+            "low_priority_groups": 9,
+            "correctly_classified_groups": 12,
+            "incorrectly_classified_groups": 3,
+            "attack_groups_correct_high": 4,
+            "noise_groups_correct_low": 8,
+        })
+
+    def test_fixed_contamination_is_resolved_without_labels(self):
+        self.assertEqual(priority.resolve_contamination("0.03", [1, 0, 1]), 0.03)
+        self.assertEqual(priority.resolve_contamination("auto", [1, 0, 1]), "auto")
+        self.assertAlmostEqual(priority.resolve_contamination("label_rate", [1, 0, 1]), 2 / 3)
+        with self.assertRaises(ValueError):
+            priority.resolve_contamination("0.51", [1, 0])
+
 
 class ScoreAggregationTests(unittest.TestCase):
     def accumulator(self):

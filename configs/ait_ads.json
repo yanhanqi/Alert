@@ -1,0 +1,18 @@
+{
+  "dataset": "AIT-ADS",
+  "data_dir": "datasets/alerts_csv",
+  "file_pattern": "{scenario}_alerts.txt",
+  "split_unit": "scenario",
+  "train": [
+    "fox",
+    "harrison",
+    "russellmitchell",
+    "santos",
+    "shaw",
+    "wardbeck"
+  ],
+  "test": [
+    "wheeler",
+    "wilson"
+  ]
+}

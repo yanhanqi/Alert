@@ -8,7 +8,7 @@ import math
 from itertools import chain
 from pathlib import Path
 
-from alert_priority.main import prioritize_alerts
+from alert_priority.main import DEFAULT_CONTAMINATION, prioritize_alerts
 
 
 WINDOW_SECONDS = 600
@@ -121,7 +121,7 @@ class WindowScoreAccumulator:
         )
 
 
-def run_pipeline(alerts, *, contamination="auto", include_aggregates=False, **window_options):
+def run_pipeline(alerts, *, contamination=DEFAULT_CONTAMINATION, include_aggregates=False, **window_options):
     """Yield window results and, optionally, one unique-alert ranking per round.
 
     The CLI enables aggregation. False preserves the original window-only API.
@@ -187,7 +187,7 @@ def select_storm_periods(alerts, *, threshold=1000, start_time=None, max_rounds=
 
 
 def run_storm_pipeline(alerts, *, threshold=1000, start_time=None, max_rounds=None,
-                       contamination="auto", stream_id="input"):
+                       contamination=DEFAULT_CONTAMINATION, stream_id="input"):
     """Run priority ranking only on volume-triggered, nonoverlapping rounds."""
     for index, trigger in enumerate(select_storm_periods(
         alerts, threshold=threshold, start_time=start_time, max_rounds=max_rounds
@@ -231,7 +231,8 @@ def main():
     parser.add_argument("--start-time", type=float, help="Unix timestamp of the first round; default: floor first alert to 30 minutes.")
     parser.add_argument("--max-rounds", type=int, help="Limit rounds per scenario for a smoke run; default: entire scenario.")
     parser.add_argument("--storm-threshold", type=int, help="Enable simulated storm gating at this raw count per 10 minutes (e.g. 1000).")
-    parser.add_argument("--contamination", default="auto", help="auto or a fixed ratio in (0, 0.5]; never inferred from test labels.")
+    parser.add_argument("--contamination", default=str(DEFAULT_CONTAMINATION),
+                        help="fixed ratio in (0, 0.5] or auto; never inferred from test labels.")
     parser.add_argument("--output", type=Path, help="New JSONL file containing window records and averaged round_summary records.")
     args = parser.parse_args()
     contamination = "auto" if args.contamination == "auto" else float(args.contamination)
